@@ -1,0 +1,35 @@
+Insert cells 1 and 2 immediately below the cell that contains:
+# in case of 'database locked' errors, run this
+conn.close()
+
+Cell 1
+# We need to fix a problem in the assignments table.
+# Values in the student_id column have extra quotation marks. So we are going to run an update query
+# First, let's get the student numbers we need from the course object
+myobj = crslist[0]
+student1 = myobj.enrollment[0]
+student2 = myobj.enrollment[1]
+print(student1, student2)
+
+Cell 2
+# records 1 - 15 in the assignments table are for Jessica Arnold; 16 - 30 are for William Arnold
+# open the connection and run the query
+conn = sqlite3.connect(db_path)
+cur = conn.cursor()
+cur.execute(f'UPDATE assignments SET student_id = {student1[2]} WHERE assign_id <= 15;')
+print(cur.rowcount, 'rows updated')
+cur.execute(f'UPDATE assignments SET student_id = {student2[2]} WHERE assign_id > 15;')
+print(cur.rowcount, 'rows updated')
+conn.commit()
+conn.close()
+
+Cell 3 is a short routine that checks the length of your assignments table after you complete task 2. Insert it after your task 2 execution cell.
+ 
+Cell 3
+# 40 students X 15 assignments = 600 rows total. Verify the rowcount.
+conn = sqlite3.connect(db_path)
+cur = conn.cursor()
+cur.execute('SELECT * FROM assignments')
+print(len(cur.fetchall()), 'rows')
+conn.close()
+# if the rowcount is not 600, delete any inserted rows (assign_id > 30) and try again
